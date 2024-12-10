@@ -55,13 +55,13 @@ jobs:
           rm -f package-lock.json
           rm -f .prettierrc
           rm -f .prettierignore
-
       - name: Commit changes
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git
           git add .
           git diff --cached --quiet || git commit -m "AutoFormat"
           git push origin HEAD:${{ github.ref }}
