@@ -38,6 +38,7 @@ jobs:
           }' > .prettierrc
           echo '# Ignore all minified files
           *.min.*
+          .github/**/*
           *-min.*' > .prettierignore
 
       - name: Install Prettier with plugins
@@ -46,7 +47,7 @@ jobs:
 
       - name: Format all files
         run: |
-          npx prettier -w .
+          npx prettier -w **/*
 
       - name: Clean up unnecessary files
         run: |
@@ -57,11 +58,7 @@ jobs:
           rm -f .prettierignore
       - name: Commit changes
         env:
-          GITHUB_TOKEN: ${{ secrets.RL_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.RL_PAT }}@github.com/${{ github.repository }}.git
-          git add .
-          git diff --cached --quiet || git commit -m "AutoFormat"
-          git push origin HEAD:${{ github.ref }}
