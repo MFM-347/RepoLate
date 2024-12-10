@@ -47,7 +47,7 @@ jobs:
 
       - name: Format all files
         run: |
-          npx prettier -w **/*
+          npx prettier -w .
 
       - name: Clean up unnecessary files
         run: |
