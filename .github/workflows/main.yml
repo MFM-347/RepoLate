@@ -42,7 +42,7 @@ jobs:
 
     - name: Install Prettier with plugins
       run: |
-        npm install --save-dev prettier prettier-plugin-yaml prettier-plugin-sass prettier-plugin-json prettier-plugin-markdown
+        npm i -D prettier prettier-plugin-yaml prettier-plugin-sass prettier-plugin-java prettier-plugin-markdown
 
     - name: Format all files
       run: |
