@@ -1,14 +1,14 @@
-name: AutoFormat
+name: format
 
 on:
   push:
     paths:
-      - "**/*"
+      - '**/*'
     branches:
       - main
   pull_request:
     paths:
-      - "**/*"
+      - '**/*'
     branches:
       - main
   workflow_dispatch:
@@ -24,8 +24,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
-
+          node-version: '16'
       - name: Configure Prettier
         run: |
           echo '{
@@ -33,17 +32,24 @@ jobs:
             "singleQuote": true,
             "tabWidth": 2,
             "trailingComma": "es5",
-            "printWidth": 80,
-            "arrowParens": "always"
+            "printWidth": 100,
+            "arrowParens": "always",
+            "plugins": [
+              "prettier-plugin-tailwindcss",
+              "prettier-plugin-java",
+              "prettier-plugin-kotlin",
+              "prettier-plugin-organize-imports",
+              "prettier-plugin-packagejson"
+            ]
           }' > .prettierrc
-          echo '# Ignore all minified files
+          echo 'dist
           *.min.*
           .github/**/*
           *-min.*' > .prettierignore
 
       - name: Install Prettier with plugins
         run: |
-          npm i -D prettier prettier-plugin-java prettier-plugin-kotlin
+          npm i -D prettier prettier-plugin-tailwindcss prettier-plugin-organize-imports prettier-plugin-packagejson prettier-plugin-java prettier-plugin-kotlin
 
       - name: Format all files
         run: |
@@ -52,10 +58,14 @@ jobs:
       - name: Clean up unnecessary files
         run: |
           rm -rf node_modules
-          rm -f package.json
-          rm -f package-lock.json
           rm -f .prettierrc
           rm -f .prettierignore
+          npm uninstall prettier prettier-plugin-tailwindcss prettier-plugin-organize-imports prettier-plugin-packagejson prettier-plugin-java prettier-plugin-kotlin
+
+      - name: Format all files
+        run: |
+          npx prettier -w .
+
       - name: Commit changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
